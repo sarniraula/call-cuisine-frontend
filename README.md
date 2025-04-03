@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Call Cuisine
 
-## Getting Started
+Call Cuisine is an AI-powered restaurant order automation system that takes customer orders via phone calls, processes them using AI-driven speech-to-text, and sends SMS notifications with order details. The system includes a backend built with Node.js and MongoDB, and a frontend built with Next.js for real-time order tracking.
 
-First, run the development server:
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Setup Instructions](#setup-instructions)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
 
-```bash
+---
+
+## Features
+- **AI-Powered Voice Ordering**: Handles customer orders over the phone using AI.
+- **Real-Time Dashboard**: Displays ongoing and completed orders for restaurant staff.
+- **SMS Notifications**: Sends order confirmations and estimated pickup times.
+- **Order Management**: Staff can process, complete, cancel, and print orders.
+- **Order History**: (Planned) A page to track past orders with filters.
+
+## Tech Stack
+**Backend:** Node.js, Express.js, MongoDB, Twilio (or Retell AI for call handling), Socket.io
+
+**Frontend:** Next.js, Tailwind CSS, React, Socket.io-client
+
+## System Architecture
+1. Customer calls the restaurant number.
+2. AI processes speech-to-text and extracts order details.
+3. The backend stores the order in MongoDB and sends confirmation via Twilio SMS.
+4. The frontend dashboard displays orders for restaurant staff.
+5. Staff members can update order statuses in real time.
+
+---
+
+## Setup Instructions
+### Backend
+#### Prerequisites
+- Node.js installed
+- MongoDB running locally or on a cloud provider (MongoDB Atlas)
+- Twilio or Retell AI API credentials
+
+#### Installation
+```sh
+# Clone the repository
+git clone https://github.com/sarniraula/call-cuisine-backend.git
+cd call-cuisine-backend
+
+# Install dependencies
+npm install
+
+# Create a .env file and add the following variables
+MONGO_URI=your_mongodb_connection_string
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_auth_token
+TWILIO_PHONE_NUMBER=your_twilio_phone_number
+
+# Start the server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Frontend
+#### Prerequisites
+- Node.js installed
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Installation
+```sh
+# Clone the repository
+git clone https://github.com/sarniraula/call-cuisine-frontend.git
+cd call-cuisine-frontend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Install dependencies
+npm install
 
-## Learn More
+# Create a .env file and add the API base URL
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 
-To learn more about Next.js, take a look at the following resources:
+# Start the development server
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Usage
+- **Backend** runs on `http://localhost:8000`.
+- **Frontend** runs on `http://localhost:3000`.
+- When a customer calls, the backend processes the call and stores the order.
+- Staff members log into the frontend dashboard to manage orders.
 
-## Deploy on Vercel
+## API Endpoints
+| Method | Endpoint           | Description                |
+|--------|--------------------|----------------------------|
+| POST   | `/api/orders`      | Create a new order        |
+| GET    | `/api/orders/today` | Fetch today's orders      |
+| PATCH  | `/api/orders/:id`  | Update an order status    |
+| GET    | `/api/orders/history` | Fetch past orders       |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
+If you’d like to contribute:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature-name`)
+3. Commit your changes (`git commit -m 'Add feature'`)
+4. Push to the branch (`git push origin feature-name`)
+5. Open a Pull Request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the MIT License.
