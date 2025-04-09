@@ -24,23 +24,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [socketConnected, setSocketConnected] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const socket = initializeSocket();
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const auth = localStorage.getItem("auth");
+      setIsAuthenticated(auth === "true");
+    }
 
-      socket.on("connect", () => {
-          setSocketConnected(true);
-          console.log("Connected to WebSocket Server");
-      });
+    socket.on("connect", () => {
+        setSocketConnected(true);
+        console.log("Connected to WebSocket Server");
+    });
 
-      socket.on("disconnect", () => {
-          setSocketConnected(false);
-          console.log("Disconnected from WebSocket Server");
-      });
+    socket.on("disconnect", () => {
+        setSocketConnected(false);
+        console.log("Disconnected from WebSocket Server");
+    });
 
-      return () => {
-          socket.disconnect();
-      };
+    return () => {
+        socket.disconnect();
+    };
   }, []);
 
   return (
@@ -49,12 +54,12 @@ export default function RootLayout({
 
         <div className="flex h-screen">
           {/* Sidebar */}
-          <Sidebar />
-
+          {isAuthenticated && <Sidebar />}
+          
           {/* Main Content */}
           <div className="flex flex-col flex-1">
             {/* Navbar */}
-            <Navbar />
+            {isAuthenticated && <Navbar />}
 
             {/* Page Content */}
             <main className="p-6 overflow-auto">{children}</main>

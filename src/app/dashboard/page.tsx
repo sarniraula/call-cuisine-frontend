@@ -1,16 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 import io from "socket.io-client";
 
 const socket = io("http://localhost:8000");
 
 export default function Dashboard() {
+  const router = useRouter();
   const [stats, setStats] = useState({
     totalOrders: 0,
     pendingOrders: 0,
     closedOrders: 0,
     canceledOrders: 0,
   });
+  const [role, setRole] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   // Fetch daily stats
   const fetchStats = async () => {
@@ -27,6 +31,18 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    const isAuthenticated = localStorage.getItem('auth');
+    const roleFromStorage = localStorage.getItem('role');
+    const usernameFromStorage = localStorage.getItem('username');
+
+    if (!isAuthenticated) {
+      router.push('/login');
+    } else {
+      setRole(roleFromStorage);
+      setUsername(usernameFromStorage);
+      router.push('/dashboard');
+    }
+    
     fetchStats();
     const interval = setInterval(fetchStats, 20000);
 
@@ -44,6 +60,9 @@ export default function Dashboard() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <span className="text-gray-600">
+          Welcome, <strong>{username}</strong> ({role})
+        </span>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <div className="bg-gray-200 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Total Orders</h2>
